@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Card UI</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 flex items-center justify-center h-screen w-screen m-0 select-none">
+
+    <!-- Card Container -->
+    <div class="bg-[#18181b] border border-gray-1200 rounded-2xl p-6 w-96 shadow-2xl text-white font-sans">
+        
+        <!-- Header (Name & Level) -->
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-3xl font-bold tracking-wide">Arin</h2>
+            <span class="bg-gray-800 text-gray-300 text-xs font-semibold px-3 py-1.5 rounded-lg border border-gray-700">
+                LVL 5
+            </span>
+        </div>
+
+        <!-- HP Label & Value -->
+        <div class="flex justify-between items-center mb-1.5">
+            <span class="text-xs font-bold tracking-wider text-gray-400">HP</span>
+            <span id="hp-text" class="font-bold text-xl text-green-400">100 / 100</span>
+        </div>
+
+        <!-- HP Progress Bar -->
+        <div class="w-full bg-gray-900 rounded-full h-4 p-0.5 border border-gray-800 mb-6 overflow-hidden">
+            <div id="hp-bar" class="bg-gradient-to-r from-green-500 to-emerald-400 h-full rounded-full shadow-[0_0_12px_rgba(74,222,128,0.4)] transition-all duration-300" style="width: 100%;"></div>
+        </div>
+
+        <!-- Action Buttons Container -->
+        <div id="action-buttons" class="grid grid-cols-2 gap-3">
+            <!-- Attack Button (Sword Icon) -->
+            <button onclick="handleAttack()" class="flex items-center justify-center gap-2 bg-[#dc2626] hover:bg-red-700 active:scale-95 transition-all text-white font-semibold py-3 px-4 rounded-xl shadow-lg cursor-pointer">
+                <!-- Sword SVG -->
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.5 3.5L20.5 9.5M16 5l-8.5 8.5a2.121 2.121 0 000 3l1.5 1.5a2.121 2.121 0 003 0L19 10.5M4 20l4-4"></path>
+                </svg>
+                Attack
+            </button>
+
+            <!-- Heal Button (Heart Icon) -->
+            <button onclick="handleHeal()" class="flex items-center justify-center gap-2 bg-[#2563eb] hover:bg-blue-700 active:scale-95 transition-all text-white font-semibold py-3 px-4 rounded-xl shadow-lg cursor-pointer">
+                <!-- Heart SVG -->
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                Heal
+            </button>
+        </div>
+
+        <!-- Reset Button (Hidden by default, shows when dead) -->
+        <div id="reset-container" class="hidden">
+            <button onclick="handleReset()" class="w-full bg-gray-700 hover:bg-gray-600 active:scale-95 transition-all text-white font-semibold py-3 px-4 rounded-xl shadow-lg cursor-pointer">
+                Revive / Reset
+            </button>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        let hp = 100;
+        const maxHp = 100;
+
+        const hpText = document.getElementById('hp-text');
+        const hpBar = document.getElementById('hp-bar');
+        const actionButtons = document.getElementById('action-buttons');
+        const resetContainer = document.getElementById('reset-container');
+
+        function updateUI() {
+            hpText.innerText = hp > 0 ? `${hp} / ${maxHp}` : "DEAD";
+            hpText.className = `font-bold text-xl ${hp > 0 ? 'text-green-400' : 'text-red-500'}`;
+            
+            const percentage = (hp / maxHp) * 100;
+            hpBar.style.width = `${percentage}%`;
+
+            if (hp <= 0) {
+                actionButtons.classList.add('hidden');
+                resetContainer.classList.remove('hidden');
+            } else {
+                actionButtons.classList.remove('hidden');
+                resetContainer.classList.add('hidden');
+            }
+        }
+
+        function handleAttack() {
+            if (hp <= 0) return;
+            hp -= 15;
+            if (hp < 0) hp = 0;
+            updateUI();
+        }
+
+        function handleHeal() {
+            if (hp <= 0) return;
+            hp += 20;
+            if (hp > maxHp) hp = maxHp;
+            updateUI();
+        }
+
+        function handleReset() {
+            hp = maxHp;
+            updateUI();
+        }
+    </script>
+
+</body>
+</html>
